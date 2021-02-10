@@ -1,0 +1,5 @@
+Steps to be followed to run the project:
+	step 1: Download the zip file and make the current directory as this prjct folder.
+	step 2: run npm install
+	step 3: run npm start
+	
