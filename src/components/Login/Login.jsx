@@ -3,8 +3,8 @@ import { Formik } from "formik";
 // import { Link } from "react-router";
 //import AppRegister from "./AppRegister";
 
-import "./Form.scss";
-import AppRegister from "./AppRegister";
+import "../../Form/Form.scss";
+
 
 const initialValues = {
   email: "",
@@ -30,13 +30,11 @@ const validate = (values) => {
   return errors;
 };
 
-
-
 const submitForm = (values) => {
   console.log(values);
 };
 
-const Form = () => {
+const Login = () => {
   return (
     <Formik
       initialValues={initialValues}
@@ -101,11 +99,14 @@ const Form = () => {
               >
                 Sign In
               </button>
-              <div className="row" style={{marginTop:"25px", fontSize:"25px"}}>
+              <div
+                className="row"
+                style={{ marginTop: "25px", fontSize: "25px" }}
+              >
                 <div className="col-sm-4 mt-2"></div>
                 <div className="col-sm-4 right">
                   {/* <Link to="/register" > Register </Link> */}
-                  <a href="/test" >Register</a>
+                  <a href="/signup">Register</a>
                 </div>
                 <div className="col-sm-4 mt-2"></div>
               </div>
@@ -117,4 +118,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default Login;

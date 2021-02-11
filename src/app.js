@@ -1,29 +1,30 @@
-//import React from "react";
-import Form from "./Form/Form";
+
+import LoginApp from "./components/Login/LoginApp";
+import SignupApp from "./components/Signup/SignupApp";
+
 import React, { Component } from 'react';
-import Header from "./Header";
+
+import { BrowserRouter, Route } from 'react-router-dom';
+
+
 
 import "./App.css";
 class App extends Component {
   state = {  }
   render() { 
     return (
-      <div className="App text-white m-50">
-        <Header />
-        <Form />
-      </div>
+      <BrowserRouter>
+        <div className="App text-white m-50">
+          <Route exact path="/" component={LoginApp} />
+          <Route path="/signup" component={SignupApp} />
+
+          {/* <Header />
+          <Form /> */}
+        </div>
+      </BrowserRouter>
     );
   }
 }
- 
 export default App;
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <Form />
-//     </div>
-//   );
-// }
 
-// export default App;
