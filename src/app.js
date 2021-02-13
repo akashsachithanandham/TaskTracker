@@ -1,6 +1,7 @@
 
 import LoginApp from "./components/Login/LoginApp";
 import SignupApp from "./components/Signup/SignupApp";
+import HomePageApp from "./components/HomePage/HomePageApp";
 
 import React, { Component } from 'react';
 
@@ -17,6 +18,7 @@ class App extends Component {
         <div className="App text-white m-50">
           <Route exact path="/" component={LoginApp} />
           <Route path="/signup" component={SignupApp} />
+          <Route path="/home" component={HomePageApp}/>
 
           {/* <Header />
           <Form /> */}

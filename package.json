@@ -5,14 +5,16 @@
   "dependencies": {
     "@sentry/react": "^6.1.0",
     "@sentry/tracing": "^6.1.0",
-    "bootstrap": "^4.1.1",
+    "bootstrap": "^4.6.0",
     "formik": "^2.2.6",
+    "mdbreact": "^5.0.1",
     "netlify": "^6.1.7",
     "node-sass": "^4.14.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router": "^5.2.0",
     "react-scripts": "3.0.1",
+    "web-vitals": "^1.1.0",
     "yup": "^0.32.8"
   },
   "scripts": {
