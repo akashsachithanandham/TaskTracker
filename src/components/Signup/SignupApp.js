@@ -13,7 +13,7 @@ class App extends Component {
         <div style={{ marginTop: "-20px" }}>
           <Header />
         </div>
-        <div style={{ marginTop: "-100px" }}>
+        <div style={{ marginTop: "-10px" }}>
           <Signup />{" "}
         </div>
       </div>

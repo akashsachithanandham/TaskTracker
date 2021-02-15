@@ -18,11 +18,11 @@ class App extends Component {
         <div className="App text-white m-50">
           <Route exact path="/" component={LoginApp} />
           <Route path="/signup" component={SignupApp} />
-          <Route path="/home" component={HomePageApp}/>
 
           {/* <Header />
           <Form /> */}
         </div>
+        <Route path="/home" component={HomePageApp} />
       </BrowserRouter>
     );
   }

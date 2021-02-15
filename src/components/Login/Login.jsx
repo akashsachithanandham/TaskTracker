@@ -53,68 +53,83 @@ const Login = () => {
           dirty,
         } = formik;
         return (
-          <div className="container">
-            <h1>Sign in to continue</h1>
-            <form onSubmit={handleSubmit}>
-              <div className="form-row">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.email && touched.email ? "input-error" : null
-                  }
-                />
-                {errors.email && touched.email && (
-                  <span className="error">{errors.email}</span>
-                )}
-              </div>
-
-              <div className="form-row">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.password && touched.password ? "input-error" : null
-                  }
-                />
-                {errors.password && touched.password && (
-                  <span className="error">{errors.password}</span>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                className={!(dirty && isValid) ? "disabled-btn" : ""}
-                disabled={!(dirty && isValid)}
-              >
-                Sign In
-              </button>
-              <div
-                className="row"
-                style={{ marginTop: "25px", fontSize: "25px" }}
-              >
-                <div className="col-sm-4 mt-2"></div>
-                <div className="col-sm-4 right">
-                  {/* <Link to="/register" > Register </Link> */}
-                  <a href="/signup">Register</a>
+          <div style={{ display: "flex", width:"30%", align:"center",margin:"auto" }}>
+            <div
+              className=" container text-wrap"
+              style={{
+                paddingTop: "50px",
+                paddingBottom: "50px",
+                paddingLeft: "75px",
+                paddingRight: "75px",
+                marginTop: "5rem",
+                height: "100%",
+              }}
+            >
+              <h3 className="text-dark" style={{ marginBottom: "50px" }}>
+                Sign in to continue!
+              </h3>
+              <form onSubmit={handleSubmit}>
+                <div className="form-row">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={
+                      errors.email && touched.email ? "input-error" : null
+                    }
+                  />
+                  {errors.email && touched.email && (
+                    <span className="error">{errors.email}</span>
+                  )}
                 </div>
-                <div className="col-sm-4 mt-2"></div>
-              </div>
-            </form>
+
+                <div className="form-row">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={
+                      errors.password && touched.password ? "input-error" : null
+                    }
+                  />
+                  {errors.password && touched.password && (
+                    <span className="error">{errors.password}</span>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className={!(dirty && isValid) ? "disabled-btn" : ""}
+                  disabled={!(dirty && isValid)}
+                >
+                  Sign In
+                </button>
+                <div
+                  className="row"
+                  style={{ marginTop: "25px", fontSize: "25px" }}
+                >
+                  <div className="col-sm-4 mt-2"></div>
+                  <div className="col-sm-4 right">
+                    {/* <Link to="/register" > Register </Link> */}
+                    <a href="/signup">Register</a>
+                  </div>
+                  <div className="col-sm-4 mt-2"></div>
+                </div>
+              </form>
+            </div>
           </div>
         );
       }}
     </Formik>
+          
   );
 };
 
