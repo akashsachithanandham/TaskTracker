@@ -78,11 +78,11 @@ const submitForm = (values) => {
   var teamName = "Team1";
   var sessionAuthToken =
     localStorage.getItem("access_token");
-  var res = fetch("http://13.232.149.111:8000/createtask", {
+  var res = fetch("https://jedischoolteam3.tk/createtask", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "JWT " + sessionAuthToken 
+      Authorization: "JWT " + sessionAuthToken,
     },
     // We convert the React state to JSON and send it as the POST body
     body: JSON.stringify({
@@ -93,17 +93,16 @@ const submitForm = (values) => {
       Assignee: values.taskAssignee,
       Reporter: values.taskReporter,
       Status: "to-do",
-      User_Name:sessionUserName,
-      Team_Name: teamName
-
+      User_Name: sessionUserName,
+      Team_Name: teamName,
     }),
   }).then(function (response) {
     var statusCode = response.status;
     console.log(statusCode);
     if (statusCode == "201") {
-       toast.info("Task Created Successfully", {
-         position: toast.POSITION.TOP_CENTER,
-       });
+      toast.info("Task Created Successfully", {
+        position: toast.POSITION.TOP_CENTER,
+      });
       window.location.reload();
     }
     return response.json();
@@ -156,13 +155,11 @@ class CreateTaskApp extends Component {
   
   componentDidMount() {
     //this.setState({ loading: true });
-     var UserDetails1 = fetch("http://13.232.149.111:8000/users/Team1", {
+     var UserDetails1 = fetch("https://jedischoolteam3.tk/users/Team1", {
        method: "GET",
        headers: {
          "Content-Type": "application/json",
-         Authorization:
-           "JWT " +
-           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM1MzkwNzksImlhdCI6MTYxMzUzODc3OSwibmJmIjoxNjEzNTM4Nzc5LCJpZGVudGl0eSI6MjR9.qkThgWJ5Rvb6hbGbMWMWJNJV6_HBdGGjwDE_Fi7x5Mg",
+         Authorization: "JWT " + localStorage.getItem("access_token"),
        },
        // We convert the React state to JSON and send it as the POST body
      }).then(function (response) {
@@ -177,7 +174,7 @@ class CreateTaskApp extends Component {
 
     printMessage();
     
-     var UserDetails1 = fetch("http://13.232.149.111:8000/task/Team1", {
+     var UserDetails1 = fetch("https://jedischoolteam3.tk/task/Team1", {
        method: "GET",
        headers: {
          "Content-Type": "application/json",

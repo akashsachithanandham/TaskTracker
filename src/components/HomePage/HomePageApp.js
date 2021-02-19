@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import "../../App.css";
-import Home from "./HomePage";
+import Home from "./HomeComponent";
 import NavbarPage from "../NavBar/NavBar";
 
 class HomepageApp extends Component {

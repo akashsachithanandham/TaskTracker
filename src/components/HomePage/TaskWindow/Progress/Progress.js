@@ -1,92 +1,40 @@
-// import React , {Component} from 'react';
-// import './Progress.css'
-// class Progress extends Component{
-//     render(){
-//         return <div class = "container ">
-//             <div class="container-fluid">
-//                 Progress
-//             </div>
-//         </div>;
-//     }
-// }
-// export default Progress
 
 
+import Modal from "react-modal";
 import React, { Component } from "react";
 import "./Progress.css";
 import axios from "axios";
 class Progress extends Component {
   constructor(props) {
     super(props);
-    var priority = "";
-    if (this.props.Priority == "3") {
-      priority = "Low";
-    } else if (this.props.Priority == "2") {
-      priority = "Medium";
-    } else if (this.props.Priority == "1") {
-      priority = "High";
-    }
+    this.state = { modalIsOpen: false, deleteModalIsOpen: false };
 
-    this.state = {
-      taskbutton: false,
-      Task_id: this.props.Task_id,
-      Title: this.props.Title,
-      Team_Name: this.props.Team_Name,
-      Description: this.props.Description,
-      Assignee: this.props.Assignee,
-      Reporter: this.props.Reporter,
-      Planned_Date: this.props.Planned_Date,
-      Status: this.props.Status,
-      Priority: priority,
-    };
-    this.taskInfo = this.taskInfo.bind(this);
-    this.CloseCard = this.CloseCard.bind(this);
-    this.saveChanges = this.saveChanges.bind(this);
-    this.changeStatus = this.changeStatus.bind(this);
+   
   }
 
-  taskInfo() {
-    this.setState({
-      taskbutton: true,
-      ...this.state.Task_id,
-      ...this.state.Team_Name,
-      ...this.state.Title,
-      ...this.state.Description,
-      ...this.state.Assignee,
-      ...this.state.Reporter,
-      ...this.state.Planned_Date,
-      ...this.state.Status,
-      ...this.state.Priority,
-    });
-  }
-  CloseCard() {
-    this.setState({
-      taskbutton: false,
-      ...this.state.Task_id,
-      ...this.state.Title,
-      ...this.state.Team_Name,
-      ...this.state.Description,
-      ...this.state.Assignee,
-      ...this.state.Reporter,
-      ...this.state.Planned_Date,
-      ...this.state.Status,
-      ...this.state.Priority,
-    });
-  }
-  changeStatus() {
-    this.setState({
-      ...this.state.taskbutton,
-      ...this.state.Title,
-      ...this.state.Task_id,
-      ...this.state.Team_Name,
-      ...this.state.Description,
-      ...this.state.Assignee,
-      ...this.state.Reporter,
-      ...this.state.Planned_Date,
-      Status: "finish",
-    });
-  }
+  openModal = () => {
+    this.setState({ modalIsOpen: true, deleteModalIsOpen: false });
+  };
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false, deleteModalIsOpen: false });
+  };
+  openDeleteModal = () => {
+    this.setState({ modalIsOpen: false, deleteModalIsOpen: true });
+  };
+
+  
+
+  handleModalCloseRequest = () => {
+    this.setState({ modalIsOpen: false, deleteModalIsOpen: false });
+  };
+
+  handleSaveClicked = (e) => {
+    alert("Save button was clicked");
+  };
+
   handleDelete = () => {
+    console.log("Task_id:", this.props.Task_id);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -96,34 +44,23 @@ class Progress extends Component {
 
       redirect: "follow",
     };
-    console.log("http://13.232.149.111:8000/tasks/" + this.state.Task_id);
+    console.log("https://jedischoolteam3.tk/tasks/" + this.props.Task_id);
     fetch(
-      "http://13.232.149.111:8000/tasks/" + this.state.Task_id,
+      "https://jedischoolteam3.tk/tasks/" + this.props.Task_id,
       requestOptions
     )
       .then((response) => response.text())
       .then((result) => window.location.reload())
       .catch((error) => console.log("error", error));
   };
-  saveChanges() {
-    this.setState({
-      taskbutton: false,
-      ...this.state.Team_Name,
-      ...this.state.Title,
-      ...this.state.Description,
-      ...this.state.Assignee,
-      ...this.state.Reporter,
-      ...this.state.Planned_Date,
-      ...this.state.Status,
-      ...this.state.Priority,
-      ...this.state.Task_id,
-    });
-    console.log(this.state.Status);
+  saveChanges = (e) => {
+    console.log(this.props.Task_id);
+
     axios
-      .put(
-        `http://65.0.91.167:8000/task/` + this.state.Title,
+      .patch(
+        `https://jedischoolteam3.tk/task/` + this.props.Task_id,
         {
-          Status: this.state.Status,
+          Status: this.state.select,
         },
         {
           headers: {
@@ -133,13 +70,31 @@ class Progress extends Component {
       )
       .then(console.log("Success"))
       .catch((err) => console.log(err));
-  }
+    };
+    handleSelect = (e) => {
+        
+          this.setState({ select: e.target.value });
+        
+    }
 
-  render() {
-    if (this.state.taskbutton == true) {
-      return (
-        <div>
-          <div
+    render() {
+       let priority = "";
+       if (this.props.Priority == "3") {
+         priority = "High";
+       } else if (this.props.Priority == "2") {
+         priority = "Medium";
+       } else if (this.props.Priority == "1") {
+         priority = "Low";
+       }
+    return (
+      <React.Fragment>
+        <Modal
+          className="Modal__Bootstrap modal-dialog modal-lg"
+          closeTimeoutMS={150}
+          isOpen={this.state.deleteModalIsOpen}
+          onRequestClose={this.handleModalCloseRequest}
+        >
+          {/* <div
             class="modal fade"
             id="confirm-delete"
             tabindex="-1"
@@ -147,7 +102,7 @@ class Progress extends Component {
             aria-labelledby="myModalLabel"
             aria-hidden="true"
           >
-            <div class="modal-dialog">
+            <div class="modal-dialog"> */}
               <div class="modal-content">
                 <div class="modal-header">Delete Confirmation</div>
                 <div class="modal-body">Are you sure to delete this task?</div>
@@ -156,6 +111,7 @@ class Progress extends Component {
                     type="button"
                     class="btn-sm btn-default"
                     data-dismiss="modal"
+                    onClick={this.handleModalCloseRequest}
                   >
                     No
                   </button>
@@ -169,39 +125,35 @@ class Progress extends Component {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle1">
-                {this.state.Title}
-              </h5>
+            {/* </div>
+          </div> */}
+        </Modal>
+        <Modal
+          className="Modal__Bootstrap modal-dialog modal-lg"
+          closeTimeoutMS={150}
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.handleModalCloseRequest}
+        >
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{this.props.Title}</h5>
               <button
                 type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onClick={this.CloseCard}
+                className="close"
+                onClick={this.handleModalCloseRequest}
               >
                 <span aria-hidden="true">&times;</span>
+                <span className="sr-only">Close</span>
               </button>
             </div>
-            <div class="modal-body">
-              {/* <a
-                href="#"
-                style={{
-                  display: "inline-block",
-                  float: "right",
-                  margin: "12px 12px 0px 0px",
-                  position: "absolute",
-                  bottom: "0",
-                  right: "0",
-                }}
-                data-toggle="modal"
-                data-target="#confirm-delete"
-              >
-                <span class="glyphicon glyphicon-trash"></span>
-              </a> */}
+
+            <div
+              className="modal-body"
+              style={{
+                "max-height": "calc(100vh - 210px)",
+                "overflow-y": "auto",
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -217,6 +169,7 @@ class Progress extends Component {
                   bottom: "0",
                   right: "0",
                 }}
+                onClick={this.openDeleteModal}
                 data-toggle="modal"
                 data-target="#confirm-delete"
               >
@@ -227,26 +180,26 @@ class Progress extends Component {
                 />
               </svg>
               <div>
-                <strong>Task title </strong>: {this.state.Title}
+                <strong>Task title </strong>: {this.props.Title}
               </div>
               <div>
-                <strong>Task Due Date </strong> : {this.state.Planned_Date}
+                <strong>Task Due Date </strong> : {this.props.Planned_Date}
               </div>
               <div>
-                <strong>Description </strong>: {this.state.Description}
+                <strong>Description </strong>: {this.props.Description}
               </div>
               <div>
-                <strong>Assignee </strong>: {this.state.Assignee}
+                <strong>Assignee </strong>: {this.props.Assignee}
               </div>
               <div>
-                <strong>Reporter </strong>: {this.state.Reporter}
+                <strong>Reporter </strong>: {this.props.Reporter}
               </div>
               <div>
-                <strong>Priority </strong>: {this.state.Priority}
-              </div>
+                            <strong>Priority </strong>: {priority}
+                              </div>
               <div>
                 <strong>Status </strong>: &nbsp;
-                <select class="drop-down">
+                <select class="drop-down" name="selectComponent" value={this.state.select} onClick={this.handleSelect}>
                   <option value="ToDo" active>
                     Progress
                   </option>
@@ -257,41 +210,30 @@ class Progress extends Component {
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn-sm btn-secondary"
-                data-dismiss="modal"
-                onClick={this.CloseCard}
-              >
-                Close
-              </button>
-              <button
-                type="button"
                 class="btn-sm btn-primary"
+                
                 onClick={this.saveChanges}
               >
                 Save changes
               </button>
             </div>
           </div>
-        </div>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <div
-            class="card"
-            onClick={this.taskInfo}
-            style={{ margin: "10px", width: "100%" }}
-          >
-            <div className="card-header">
-              <strong>{this.state.Title}</strong>
-              <br />
-              {this.state.Description}
-            </div>
+        </Modal>
+        <div
+          class="card"
+          onClick={this.openModal}
+          style={{ margin: "10px", width: "100%" }}
+        >
+          <div className="card-header">
+            <strong>{this.props.Title}</strong>
+            <br />
+            {this.props.Description}
           </div>
-        </React.Fragment>
-      );
-    }
+        </div>
+      </React.Fragment>
+    );
   }
 }
+
 
 export default Progress;

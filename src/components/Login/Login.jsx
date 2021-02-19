@@ -43,12 +43,11 @@ const submitForm = (values) => {
   //alert("A form was submitted: " + this.state);
   var responseStatus = "";
  
-  var res = fetch("http://13.232.149.111:8000/auth", {
+  var res = fetch("https://jedischoolteam3.tk/auth", {
     method: "POST",
-    
+
     headers: {
       "Content-Type": "application/json",
-      
     },
     // We convert the React state to JSON and send it as the POST body
     body: JSON.stringify({

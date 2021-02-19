@@ -67,7 +67,7 @@ const submitForm = (values) => {
   //alert("A form was submitted: " + this.state);
   var responseMessage = "";
   var status = "";
-  var res = fetch("http://13.232.149.111:8000/signup", {
+  var res = fetch("https://jedischoolteam3.tk/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
