@@ -1,4 +1,4 @@
-$primary-color: #1d3557;
+$primary-color: #1d4757;
 $error-color: #e63946;
 $bg-color: #f1faee;
 $text-color: #293241;
@@ -11,7 +11,9 @@ $border-radius: 4px;
 //   padding: 3rem;
 //   border-radius: $border-radius;
   
-.container{
+.container-md{
+  background-color: #e2eafc;
+  margin-bottom: 50px;
   h3 {
     font-size: 2rem;
     color: $text-color;

@@ -3,10 +3,20 @@ import ReactDOM from "react-dom";
 import Modal from "react-modal";
 
 import { Formik } from "formik";
+import { toast } from "react-toastify";
+
+// Import toastify css file
+import "react-toastify/dist/ReactToastify.css";
+
+// toast-configuration method,
+// it is compulsory method.
+
 
 import "../../Form/Form.scss";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
+toast.configure(); 
+var UserDetails = [];
 
 const initialValues = {
   taskName: "",
@@ -15,6 +25,7 @@ const initialValues = {
   taskDue: "",
   taskAssignee: "",
   taskReporter: "",
+  taskTeam:"Team1",
 };
 const isFutureDate = (idate) => {
   var today = new Date();
@@ -25,6 +36,7 @@ const isFutureDate = (idate) => {
   // idate = new Date(idate[2], idate[0] - 1, idate[1]).getTime();
   return today < newtoday;
 };
+
 
 
 const validate = (values) => {
@@ -60,6 +72,58 @@ const validate = (values) => {
 };
 const submitForm = (values) => {
   console.log(values);
+  //alert("A form was submitted: " + this.state);
+  var responseMessage = "";
+  var sessionUserName = "akashs";
+  var teamName = "Team1";
+  var sessionAuthToken =
+    localStorage.getItem("access_token");
+  var res = fetch("http://13.232.149.111:8000/createtask", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "JWT " + sessionAuthToken 
+    },
+    // We convert the React state to JSON and send it as the POST body
+    body: JSON.stringify({
+      Title: values.taskName,
+      Description: values.taskDescription,
+      Priority: values.taskPriority,
+      Planned_Date: values.taskDue,
+      Assignee: values.taskAssignee,
+      Reporter: values.taskReporter,
+      Status: "to-do",
+      User_Name:sessionUserName,
+      Team_Name: teamName
+
+    }),
+  }).then(function (response) {
+    var statusCode = response.status;
+    console.log(statusCode);
+    if (statusCode == "201") {
+       toast.info("Task Created Successfully", {
+         position: toast.POSITION.TOP_CENTER,
+       });
+      window.location.reload();
+    }
+    return response.json();
+  });
+
+  const printMessage = async () => {
+    const a = await res;
+    console.log(a.status);
+    //console.log(a);
+    //responseMessage = a.message;
+    if (a.status == "200") {
+      toast.info("Task Created Successfully", { position: toast.POSITION.TOP_CENTER });
+       this.setState({ modalIsOpen: false });
+    } else {
+      //alert(a.message);
+      toast.error(a.message, { position: toast.POSITION.TOP_CENTER });
+    }
+  };
+
+  printMessage();
 };
 
 var appElement = document.getElementById("example");
@@ -69,7 +133,7 @@ Modal.setAppElement(appElement);
 class CreateTaskApp extends Component {
   constructor(props) {
     super(props);
-    this.state = { modalIsOpen: false };
+    this.state = { modalIsOpen: false,  };
   }
 
   openModal = () => {
@@ -89,18 +153,78 @@ class CreateTaskApp extends Component {
   handleSaveClicked = (e) => {
     alert("Save button was clicked");
   };
+  
+  componentDidMount() {
+    //this.setState({ loading: true });
+     var UserDetails1 = fetch("http://13.232.149.111:8000/users/Team1", {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization:
+           "JWT " +
+           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM1MzkwNzksImlhdCI6MTYxMzUzODc3OSwibmJmIjoxNjEzNTM4Nzc5LCJpZGVudGl0eSI6MjR9.qkThgWJ5Rvb6hbGbMWMWJNJV6_HBdGGjwDE_Fi7x5Mg",
+       },
+       // We convert the React state to JSON and send it as the POST body
+     }).then(function (response) {
+       return response.json();
+     });
+
+   const printMessage = async () => {
+     UserDetails = await UserDetails1;
+     console.log(UserDetails);
+     
+   };
+
+    printMessage();
+    
+     var UserDetails1 = fetch("http://13.232.149.111:8000/task/Team1", {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization:
+           "JWT " +
+           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTM1NDI0NTUsImlhdCI6MTYxMzU0MjE1NSwibmJmIjoxNjEzNTQyMTU1LCJpZGVudGl0eSI6MjR9.r_YM8owc3M6J62VN5PnKLPuTHKuGiPS0POZeYPd6zhI",
+       },
+       // We convert the React state to JSON and send it as the POST body
+     }).then(function (response) {
+       return response.json();
+     });
+
+     const printMessage1 = async () => {
+      var Use = await UserDetails1;
+       console.log(Use);
+     };
+
+     printMessage1();
+  }
 
   render() {
+    console.log(UserDetails);
+    let UserList =
+      UserDetails.length > 0 &&
+      UserDetails.map((item) => {
+        return (
+          <option
+            key={item.User_Name}
+            value={item.User_Name}
+            
+          >
+            {item.User_Name}
+          </option>
+        );
+      }, this);
+    
+    
     return (
       <div>
-        <button
-          type="button"
-          style={{ marginTop: "25px" }}
-          className="btn btn-primary"
+        <a
+          //type="button"
+          //style={{ marginTop: "25px" }}
+          className=" btn-link"
           onClick={this.openModal}
         >
-          Open Modal
-        </button>
+          Create Task
+        </a>
         <Modal
           className="Modal__Bootstrap modal-dialog modal-lg"
           closeTimeoutMS={150}
@@ -126,7 +250,6 @@ class CreateTaskApp extends Component {
                 "overflow-y": "auto",
               }}
             >
-              
               <Formik
                 initialValues={initialValues}
                 validate={validate}
@@ -145,7 +268,7 @@ class CreateTaskApp extends Component {
                   } = formik;
                   return (
                     <div
-                      className="container"
+                      className="container-md"
                       style={{
                         paddingTop: "50px",
                         paddingBottom: "50px",
@@ -156,7 +279,9 @@ class CreateTaskApp extends Component {
                       }}
                     >
                       {/* <h3>Create Task!</h3> */}
+                     
                       <form onSubmit={handleSubmit}>
+                        
                         <div className="form-row">
                           <label htmlFor="taskName">Task Name</label>
                           <input
@@ -229,9 +354,9 @@ class CreateTaskApp extends Component {
                             <option value="" disabled>
                               Please select
                             </option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High</option>
+                            <option value="3">Low</option>
+                            <option value="2">Medium</option>
+                            <option value="1">High</option>
                           </select>
                           {errors.taskPriority && touched.taskPriority && (
                             <span className="error">{errors.taskPriority}</span>
@@ -239,7 +364,7 @@ class CreateTaskApp extends Component {
                         </div>
 
                         <div className="form-row">
-                          <label htmlFor="password">Task Due Date</label>
+                          <label htmlFor="taskDue">Task Due Date</label>
                           <input
                             className="form-control"
                             type="date"
@@ -278,9 +403,10 @@ class CreateTaskApp extends Component {
                             <option value="" selected disabled>
                               Please select
                             </option>
-                            <option value="Akash">Akash</option>
+                            {/* <option value="Akash">Akash</option>
                             <option value="Balaji">Balaji</option>
-                            <option value="Girish">Girish</option>
+                            <option value="Girish">Girish</option> */}
+                            {UserList}
                           </select>
                           {errors.taskAssignee && touched.taskAssignee && (
                             <span className="error">{errors.taskAssignee}</span>
@@ -306,9 +432,10 @@ class CreateTaskApp extends Component {
                             <option value="" selected disabled>
                               Please select
                             </option>
-                            <option value="Sanjay">Sanjay</option>
+                            {/* <option value="Sanjay">Sanjay</option>
                             <option value="Buvan">Buvan</option>
-                            <option value="Mithun">Mithun</option>
+                            <option value="Mithun">Mithun</option> */}
+                            {UserList}
                           </select>
                           {errors.taskReporter && touched.taskReporter && (
                             <span className="error">{errors.taskReporter}</span>
@@ -317,7 +444,7 @@ class CreateTaskApp extends Component {
 
                         <button
                           type="submit"
-                          className="btn-sm"
+                          className="btn btn-sm"
                           className={!(dirty && isValid) ? "disabled-btn" : ""}
                           disabled={!(dirty && isValid)}
                         >
@@ -338,13 +465,15 @@ class CreateTaskApp extends Component {
               </Formik>
             </div>
             {/* <div className="modal-footer">
+            <form>
               <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={this.handleModalCloseRequest}
-              >
-                Close
-              </button>
+                          type="submit"
+                          className="btn-sm"
+                          className={!(dirty && isValid) ? "disabled-btn" : ""}
+                          disabled={!(dirty && isValid)}
+                        >
+                          Create
+                        </button></form>
               <button
                 type="button"
                 className="btn btn-primary"

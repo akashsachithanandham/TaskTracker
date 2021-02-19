@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
 const initialValues = {
-  email: "",
+  email: "mallikasachin@gmail.com",
   password: "",
   reenterPassword: "",
   firstName: "",
@@ -66,8 +66,8 @@ const submitForm = (values) => {
   console.log(values);
   //alert("A form was submitted: " + this.state);
   var responseMessage = "";
-  var status = "";
-  var res = fetch("http://13.232.149.111:8000/signup", {
+
+  var res = fetch("http://65.0.91.167:8000/InviteeSignup/Team1", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -77,13 +77,11 @@ const submitForm = (values) => {
       User_Name: values.userName,
       First_Name: values.firstName,
       Last_Name: values.lastName,
-      User_Email: values.email,
+      User_Email: "mallikasachin@gmail.com",
       phone_no: values.phone,
       password: values.password,
     }),
   }).then(function (response) {
-    status = response.status;
-    console.log(status)
     return response.json();
   });
 
@@ -91,8 +89,7 @@ const submitForm = (values) => {
     const a = await res;
     console.log(a.message);
     responseMessage = a.message;
-    console.log(status)
-    if (status == "201") {
+    if (responseMessage === "User created successfully.") {
       //history.push('/home');
       window.location.href = "/";
     } else {
@@ -210,7 +207,7 @@ const Signup = (/*{history}*/) => {
                     <span className="error">{errors.userName}</span>
                   )}
                 </div>
-                <div className="form-row">
+                {/* <div className="form-row" style={{display:"none"}}>
                   <label htmlFor="email">Email</label>
                   <input
                     type="email"
@@ -226,7 +223,7 @@ const Signup = (/*{history}*/) => {
                   {errors.email && touched.email && (
                     <span className="error">{errors.email}</span>
                   )}
-                </div>
+                </div> */}
                 <div className="form-row">
                   <label htmlFor="phone">Phone Number</label>
                   <input

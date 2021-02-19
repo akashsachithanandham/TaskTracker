@@ -7,9 +7,9 @@ class Header extends Component {
         return (
           <React.Fragment>
             
-              <h1 className="text-center" style={{ marginTop: "50px", color:"black", fontSize:"70px",marginBottom:"-50px" }}>
+              <h3 className="text-center" style={{ marginTop: "50px", color:"black", fontSize:"70px",marginBottom:"-50px" }}>
                 Task <small className="muted-text">Tracker</small>
-              </h1>
+              </h3>
             
           </React.Fragment>
         );
