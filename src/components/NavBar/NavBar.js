@@ -3,9 +3,13 @@ import "./NavBar.css";
 import CreateTask from "../CreateTask/CreateTaskApp";
 
 class NavbarPage extends Component {
+  handleLogout = () => {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("accessToken");
+  }
   render() {
     return (
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar navbar-expand-xl pmd-navbar  ">
         <a class="navbar-brand" href="#">
           <strong> Task Tracker</strong>
         </a>
@@ -28,11 +32,16 @@ class NavbarPage extends Component {
           <ul class="navbar-nav">
             <li class="nav-item active">
               <a class="nav-link" href="#">
+                Welcome {localStorage.getItem("userName")}!
+              </a>
+            </li>
+            <li class="nav-item active" >
+              <a class="nav-link" href="#">
                 <CreateTask />
               </a>
             </li>
-            <li class="nav-item active justify-content-end" >
-              <a class="nav-link" href="/">
+            <li class="nav-item active justify-content-end">
+              <a class="nav-link" href="/" onClick={this.handleLogout}>
                 Logout
               </a>
             </li>
@@ -51,7 +60,7 @@ class NavbarPage extends Component {
         </ul>
     </div>
          */}
-          </div>
+        </div>
       </nav>
     );
   }

@@ -8,12 +8,17 @@ import Done from "./TaskWindow/Done/Done";
 import "./TaskWindow/ToDo/ToDo.css";
 import "./TaskWindow/Progress/Progress.css";
 import "./TaskWindow/Done/Done.css";
+import { toast } from "react-toastify";
 
+// Import toastify css file
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       allTasks: [],
+      descriptionTask :""
      
     };
   }
@@ -85,7 +90,7 @@ class Home extends Component {
   handlePriority = () => {
     console.log("inside priority");
     var USER_NAME = localStorage.getItem("userName");
-    var ACCESS_TOKEN = localStorage.getItem("access_token");
+      var ACCESS_TOKEN = localStorage.getItem("accessToken");
     var taskDetails = [];
 
     var taskDetailsAPI = fetch("https://jedischoolteam3.tk/sortp/Team1", {
@@ -101,7 +106,8 @@ class Home extends Component {
         console.log("Priority fetching task", json);
           //this.assignTask(json);
            this.setState({
-             allTasks: [...json],
+               allTasks: [...json],
+               descriptionTask: "The tasks are currently sorted by Priority and shown..."
            });
         return json;
       })
@@ -112,7 +118,7 @@ class Home extends Component {
   handleDueDate = () => {
     console.log("inside due date");
     var USER_NAME = localStorage.getItem("userName");
-    var ACCESS_TOKEN = localStorage.getItem("access_token");
+    var ACCESS_TOKEN = localStorage.getItem("accessToken");
     var taskDetails = [];
 
     var taskDetailsAPI = fetch("https://jedischoolteam3.tk/sortpd/Team1", {
@@ -129,6 +135,8 @@ class Home extends Component {
          // this.assignTask(json);
           this.setState({
             allTasks: [...json],
+            descriptionTask:
+              "The tasks are currently sorted by Due Date and shown...",
           });
         return json;
       })
@@ -142,11 +150,11 @@ class Home extends Component {
         if (e.target.value == "Assignee") {
             console.log("inside handleFilter");
             var USER_NAME = localStorage.getItem("userName");
-            var ACCESS_TOKEN = localStorage.getItem("access_token");
+            var ACCESS_TOKEN = localStorage.getItem("accessToken");
             var taskDetails = [];
-
+            console.log("https://jedischoolteam3.tk/usertask/" + USER_NAME);
             var taskDetailsAPI = fetch(
-                "https://jedischoolteam3.tk/usertask/" + "test",
+                "https://jedischoolteam3.tk/usertask/" + "sachin",
                 {
                     headers: {
                         Authorization: "JWT " + ACCESS_TOKEN,
@@ -161,7 +169,9 @@ class Home extends Component {
                     console.log("normal fetching task", json);
                     //this.assignTask(json);
                     this.setState({
-                        allTasks: [...json],
+                      allTasks: [...json],
+                      descriptionTask:
+                        "Only your tasks are shown...",
                     });
                     return json;
           
@@ -187,7 +197,15 @@ class Home extends Component {
 
   componentDidMount() {
     var USER_NAME = localStorage.getItem("userName");
-    var ACCESS_TOKEN = localStorage.getItem("access_token");
+      var ACCESS_TOKEN = localStorage.getItem("accessToken");
+      if (!USER_NAME) {
+         window.setTimeout(function () {
+           toast.danger("Kindly Login to see the contents", {
+             position: toast.POSITION.TOP_CENTER,
+           });
+         }, 1000);
+          window.location.href = "/";
+      }
     var taskDetails = [];
 
     var taskDetailsAPI = fetch("https://jedischoolteam3.tk/task/Team1", {
@@ -265,6 +283,15 @@ class Home extends Component {
         Status={data.Status}
       />
     ));
+        if (doneList.length == 0) {
+            var noDoneList = "Currently no task is assigned Enjoy the day!";
+        }
+         if (todoList.length == 0) {
+            var noTodoList = "Currently no task is assigned Enjoy the day!";
+        }
+         if (progressList.length == 0) {
+           var noProgressList = "Currently no task is assigned Enjoy the day!";
+         }
     console.log("this is progresslist inside render:", progressList);
     return (
       <div className="HomePage ">
@@ -292,6 +319,11 @@ class Home extends Component {
             </select>
           </div>
         </div>
+            <div className="text-center italic" style={{marginTop:"15px"}}>{
+                this.state.descriptionTask
+            }
+                
+        </div>
 
         <div className="container-lg container-sm " style={{ margin: "50px" }}>
           <div
@@ -304,8 +336,8 @@ class Home extends Component {
                   <h3 style={{ margin: "30px" }} className="text-center">
                     ToDo
                   </h3>
+                  <div className="text-center">{noTodoList}</div>
                   {todoList}
-                  {/* {this.state.todoTask}  */}
                 </div>
               </div>
               <div class="col-md-4 col-sm-12" style={{ margin: "px" }}>
@@ -314,6 +346,7 @@ class Home extends Component {
                     Progress
                   </h3>
                   {/* {this.state.progressTask} */}
+                  <div className="text-center">{noProgressList}</div>
                   {progressList}
                 </div>
               </div>
@@ -323,6 +356,7 @@ class Home extends Component {
                     Done
                   </h3>
                   {/* {this.state.doneTask} */}
+                  <div className="text-center">{noDoneList}</div>
                   {doneList}
                 </div>
               </div>

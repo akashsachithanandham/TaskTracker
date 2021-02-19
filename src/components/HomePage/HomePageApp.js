@@ -16,15 +16,3 @@ class HomepageApp extends Component {
 }
  
 export default HomepageApp;
-// function HomePageApp() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <NavbarPage />
-//       </header>
-//       <Home />
-//     </div>
-//   );
-// }
-
-//export default HomePageApp;

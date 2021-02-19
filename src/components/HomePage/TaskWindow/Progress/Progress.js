@@ -4,12 +4,11 @@ import Modal from "react-modal";
 import React, { Component } from "react";
 import "./Progress.css";
 import axios from "axios";
+
 class Progress extends Component {
   constructor(props) {
     super(props);
-    this.state = { modalIsOpen: false, deleteModalIsOpen: false };
-
-   
+    this.state = { modalIsOpen: false, deleteModalIsOpen: false, };
   }
 
   openModal = () => {
@@ -22,8 +21,9 @@ class Progress extends Component {
   openDeleteModal = () => {
     this.setState({ modalIsOpen: false, deleteModalIsOpen: true });
   };
-
-  
+  closeDeleteModal = () => {
+    this.setState({ modalIsOpen: true, deleteModalIsOpen: false });
+  };
 
   handleModalCloseRequest = () => {
     this.setState({ modalIsOpen: false, deleteModalIsOpen: false });
@@ -55,44 +55,74 @@ class Progress extends Component {
   };
   saveChanges = (e) => {
     console.log(this.props.Task_id);
+    console.log("Status",this.state.select);
+    // axios
+    //   .put(
+    //     `https://jedischoolteam3.tk/tasks/` + this.props.Task_id,
+    //     {
+    //       Status: this.state.select,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: localStorage.getItem("accessToken"),
+    //       },
+    //     }
+    //   )
+    //   .then(window.location.reload())
+    //   .catch((err) => console.log(err));
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    axios
-      .patch(
-        `https://jedischoolteam3.tk/task/` + this.props.Task_id,
-        {
-          Status: this.state.select,
-        },
-        {
-          headers: {
-            Authorization: localStorage.getItem("access_token"),
-          },
-        }
-      )
-      .then(console.log("Success"))
-      .catch((err) => console.log(err));
+    var raw = JSON.stringify({ Status: this.state.select });
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
     };
-    handleSelect = (e) => {
-        
-          this.setState({ select: e.target.value });
-        
-    }
 
-    render() {
-       let priority = "";
-       if (this.props.Priority == "3") {
-         priority = "High";
-       } else if (this.props.Priority == "2") {
-         priority = "Medium";
-       } else if (this.props.Priority == "1") {
-         priority = "Low";
-       }
+    fetch("https://jedischoolteam3.tk/tasks/"+this.props.Task_id, requestOptions)
+      .then((response) => response.text())
+      .then((result) => window.location.reload())
+      .catch((error) => alert("error", error));
+  };
+  handleSelect = (e) => {
+    this.setState({ select: e.target.value });
+    console.log(this.state.select);
+  };
+
+  render() {
+    let priority = "";
+    if (this.props.Priority == "3") {
+      priority = "High";
+    } else if (this.props.Priority == "2") {
+      priority = "Medium";
+    } else if (this.props.Priority == "1") {
+      priority = "Low";
+    }
+    let disabled = "";
+    let disabledProgress = false;
+    if (this.props.Status == "done") {
+      disabled = true;
+     
+    }
+    if (this.props.Status == "in-progress") {
+      disabledProgress = true;
+    }
     return (
       <React.Fragment>
         <Modal
           className="Modal__Bootstrap modal-dialog modal-lg"
           closeTimeoutMS={150}
           isOpen={this.state.deleteModalIsOpen}
-          onRequestClose={this.handleModalCloseRequest}
+          onRequestClose={this.closeDeleteModal}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
         >
           {/* <div
             class="modal fade"
@@ -103,29 +133,29 @@ class Progress extends Component {
             aria-hidden="true"
           >
             <div class="modal-dialog"> */}
-              <div class="modal-content">
-                <div class="modal-header">Delete Confirmation</div>
-                <div class="modal-body">Are you sure to delete this task?</div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn-sm btn-default"
-                    data-dismiss="modal"
-                    onClick={this.handleModalCloseRequest}
-                  >
-                    No
-                  </button>
-                  <button
-                    type="button"
-                    class="btn-sm btn-danger"
-                    data-dismiss="modal"
-                    onClick={this.handleDelete}
-                  >
-                    Yes
-                  </button>
-                </div>
-              </div>
-            {/* </div>
+          <div class="modal-content">
+            <div class="modal-header">Delete Confirmation</div>
+            <div class="modal-body">Are you sure to delete this task?</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn-sm btn-default"
+                data-dismiss="modal"
+                onClick={this.closeDeleteModal}
+              >
+                No
+              </button>
+              <button
+                type="button"
+                class="btn-sm btn-danger"
+                data-dismiss="modal"
+                onClick={this.handleDelete}
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+          {/* </div>
           </div> */}
         </Modal>
         <Modal
@@ -195,15 +225,23 @@ class Progress extends Component {
                 <strong>Reporter </strong>: {this.props.Reporter}
               </div>
               <div>
-                            <strong>Priority </strong>: {priority}
-                              </div>
+                <strong>Priority </strong>: {priority}
+              </div>
               <div>
                 <strong>Status </strong>: &nbsp;
-                <select class="drop-down" name="selectComponent" value={this.state.select} onClick={this.handleSelect}>
-                  <option value="ToDo" active>
+                <select
+                  class="drop-down"
+                  name="selectComponent"
+                  value={this.state.select}
+                  onChange={this.handleSelect}
+                >
+                  <option value="to-do" disabled={disabled || disabledProgress} >
+                    ToDo
+                  </option>
+                  <option value="in-progress" disabled={disabled}>
                     Progress
                   </option>
-                  <option value="in-progress">Done</option>
+                  <option value="done">Done</option>
                 </select>
               </div>
             </div>
@@ -211,7 +249,6 @@ class Progress extends Component {
               <button
                 type="button"
                 class="btn-sm btn-primary"
-                
                 onClick={this.saveChanges}
               >
                 Save changes

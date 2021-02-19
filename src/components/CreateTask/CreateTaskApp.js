@@ -351,9 +351,9 @@ class CreateTaskApp extends Component {
                             <option value="" disabled>
                               Please select
                             </option>
-                            <option value="3">Low</option>
+                            <option value="1">Low</option>
                             <option value="2">Medium</option>
-                            <option value="1">High</option>
+                            <option value="3">High</option>
                           </select>
                           {errors.taskPriority && touched.taskPriority && (
                             <span className="error">{errors.taskPriority}</span>
