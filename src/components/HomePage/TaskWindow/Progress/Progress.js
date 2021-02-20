@@ -1,14 +1,12 @@
-
-
 import Modal from "react-modal";
 import React, { Component } from "react";
 import "./Progress.css";
-import axios from "axios";
+
 
 class Progress extends Component {
   constructor(props) {
     super(props);
-    this.state = { modalIsOpen: false, deleteModalIsOpen: false, };
+    this.state = { modalIsOpen: false, deleteModalIsOpen: false };
   }
 
   openModal = () => {
@@ -55,21 +53,8 @@ class Progress extends Component {
   };
   saveChanges = (e) => {
     console.log(this.props.Task_id);
-    console.log("Status",this.state.select);
-    // axios
-    //   .put(
-    //     `https://jedischoolteam3.tk/tasks/` + this.props.Task_id,
-    //     {
-    //       Status: this.state.select,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: localStorage.getItem("accessToken"),
-    //       },
-    //     }
-    //   )
-    //   .then(window.location.reload())
-    //   .catch((err) => console.log(err));
+    console.log("Status", this.state.select);
+   
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -82,7 +67,10 @@ class Progress extends Component {
       redirect: "follow",
     };
 
-    fetch("https://jedischoolteam3.tk/tasks/"+this.props.Task_id, requestOptions)
+    fetch(
+      "https://jedischoolteam3.tk/tasks/" + this.props.Task_id,
+      requestOptions
+    )
       .then((response) => response.text())
       .then((result) => window.location.reload())
       .catch((error) => alert("error", error));
@@ -105,7 +93,6 @@ class Progress extends Component {
     let disabledProgress = false;
     if (this.props.Status == "done") {
       disabled = true;
-     
     }
     if (this.props.Status == "in-progress") {
       disabledProgress = true;
@@ -124,15 +111,6 @@ class Progress extends Component {
             transform: "translate(-50%, -50%)",
           }}
         >
-          {/* <div
-            class="modal fade"
-            id="confirm-delete"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="myModalLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog"> */}
           <div class="modal-content">
             <div class="modal-header">Delete Confirmation</div>
             <div class="modal-body">Are you sure to delete this task?</div>
@@ -155,8 +133,6 @@ class Progress extends Component {
               </button>
             </div>
           </div>
-          {/* </div>
-          </div> */}
         </Modal>
         <Modal
           className="Modal__Bootstrap modal-dialog modal-lg"
@@ -235,7 +211,7 @@ class Progress extends Component {
                   value={this.state.select}
                   onChange={this.handleSelect}
                 >
-                  <option value="to-do" disabled={disabled || disabledProgress} >
+                  <option value="to-do" disabled={disabled || disabledProgress}>
                     ToDo
                   </option>
                   <option value="in-progress" disabled={disabled}>
@@ -271,6 +247,5 @@ class Progress extends Component {
     );
   }
 }
-
 
 export default Progress;
