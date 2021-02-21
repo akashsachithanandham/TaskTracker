@@ -1,18 +1,9 @@
 import React from "react";
 import { Formik } from "formik";
-//import { Redirect } from "react-router-dom";
 import "../../Form/Form.scss";
-//import { createHashHistory } from "history";
-//import { createBrowserHistory } from "history";
-//import { withRouter } from "react-router-dom";
-
 import { toast } from "react-toastify";
-
-// Import toastify css file
 import "react-toastify/dist/ReactToastify.css";
 
-// toast-configuration method,
-// it is compulsory method.
 toast.configure();
 
 const initialValues = {
@@ -102,14 +93,7 @@ const submitForm = (values) => {
   //event.preventDefault();
 };
 
-//export default Signup;
-
-const Signup = (/*{history}*/) => {
-  //   setTimeout(() => {
-  //     //history.goBack();
-  //     history.push("/home");
-
-  // }, 200000);
+const Signup = () => {
   return (
     <Formik
       initialValues={initialValues}
@@ -207,23 +191,7 @@ const Signup = (/*{history}*/) => {
                     <span className="error">{errors.userName}</span>
                   )}
                 </div>
-                {/* <div className="form-row" style={{display:"none"}}>
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={
-                      errors.email && touched.email ? "input-error" : null
-                    }
-                  />
-                  {errors.email && touched.email && (
-                    <span className="error">{errors.email}</span>
-                  )}
-                </div> */}
+
                 <div className="form-row">
                   <label htmlFor="phone">Phone Number</label>
                   <input

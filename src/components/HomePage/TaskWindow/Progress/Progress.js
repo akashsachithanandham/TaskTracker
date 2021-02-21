@@ -31,11 +31,32 @@ class Progress extends Component {
     alert("Save button was clicked");
   };
 
-  handleDelete = () => {
+  handleDelete = (e) => {
     console.log("Task_id:", this.props.Task_id);
+
+     var myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer " + localStorage.getItem("refreshToken"));
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+var access = fetch("https://jedischoolteam3.tk/refresh", requestOptions)
+  //.then(response => response.text())
+  .then((result) => {return result.json()})
+  .catch(error => console.log('error', error));
+const getAccess = async () => {
+     const UserDetails2 = await access;
+      localStorage.setItem("accessToken",UserDetails2.access_token);
+    };
+
+    getAccess();
+  
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    myHeaders.append("Authorization","Bearer "+localStorage.getItem("accessToken"));
+    e.persist();
     var requestOptions = {
       method: "DELETE",
       headers: myHeaders,
@@ -48,15 +69,41 @@ class Progress extends Component {
       requestOptions
     )
       .then((response) => response.text())
-      .then((result) => window.location.reload())
+      .then((result) => {
+        window.location.reload();
+      }
+      )
       .catch((error) => console.log("error", error));
   };
   saveChanges = (e) => {
     console.log(this.props.Task_id);
     console.log("Status", this.state.select);
+    console.log(e.target.value);
+    e.persist();
+
+     var myHeaders = new Headers();
+myHeaders.append("Authorization", "Bearer " + localStorage.getItem("refreshToken"));
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+var access = fetch("https://jedischoolteam3.tk/refresh", requestOptions)
+  //.then(response => response.text())
+  .then((result) => {return result.json()})
+  .catch(error => console.log('error', error));
+const getAccess = async () => {
+     const UserDetails2 = await access;
+      localStorage.setItem("accessToken",UserDetails2.access_token);
+    };
+
+    getAccess();
+  
    
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", "Bearer "+localStorage.getItem("accessToken"))
 
     var raw = JSON.stringify({ Status: this.state.select });
 
@@ -72,8 +119,28 @@ class Progress extends Component {
       requestOptions
     )
       .then((response) => response.text())
-      .then((result) => window.location.reload())
-      .catch((error) => alert("error", error));
+      .then((result) => {
+        //window.location.reload()
+        if (this.props.sortFilter) {
+          console.log(" inside sortfilter")
+          console.log("e",e.target.value)
+           this.props.handleFilter(e);
+          this.handleModalCloseRequest();
+        }
+        else if (this.props.sortPriority) {
+          this.props.handlePriority();
+          this.handleModalCloseRequest();
+
+        }
+        else if( this.props.sortDueDate) {
+          this.props.handleDueDate();
+          this.handleModalCloseRequest();
+        }
+        else {
+          window.location.reload()
+        }
+      })
+      //.catch((error) => alert("error", error));
   };
   handleSelect = (e) => {
     this.setState({ select: e.target.value });
@@ -82,12 +149,16 @@ class Progress extends Component {
 
   render() {
     let priority = "";
+    let iconColor = "";
     if (this.props.Priority == "3") {
       priority = "High";
+      iconColor = "red";
     } else if (this.props.Priority == "2") {
       priority = "Medium";
+      iconColor = "gold";
     } else if (this.props.Priority == "1") {
       priority = "Low";
+      iconColor = "green";
     }
     let disabled = "";
     let disabledProgress = false;
@@ -128,6 +199,7 @@ class Progress extends Component {
                 class="btn-sm btn-danger"
                 data-dismiss="modal"
                 onClick={this.handleDelete}
+                value="callback"
               >
                 Yes
               </button>
@@ -204,9 +276,9 @@ class Progress extends Component {
                 <strong>Priority </strong>: {priority}
               </div>
               <div>
-                <strong>Status </strong>: &nbsp;
+                <strong>Status </strong>: &nbsp; 
                 <select
-                  class="drop-down"
+                 class="drop-down"
                   name="selectComponent"
                   value={this.state.select}
                   onChange={this.handleSelect}
@@ -226,6 +298,7 @@ class Progress extends Component {
                 type="button"
                 class="btn-sm btn-primary"
                 onClick={this.saveChanges}
+                value="callback"
               >
                 Save changes
               </button>
@@ -241,6 +314,36 @@ class Progress extends Component {
             <strong>{this.props.Title}</strong>
             <br />
             {this.props.Description}
+            <i
+              class="fa fa-calendar"
+              aria-hidden="true"
+              data-toggle="tooltip"
+              title={this.props.Planned_Date}
+              //title={this.props.Planned_Date}
+              style={{
+                display: "inline-block",
+                float: "right",
+                margin: "12px 12px 12px 0px",
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+              }}
+            ></i>
+            <i
+              class="fa fa-circle"
+              aria-hidden="true"
+              data-toggle="tooltip"
+              title={priority}
+              style={{
+                display: "inline-block",
+                float: "right",
+                margin: "12px 36px 12px 0px",
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+                color: iconColor,
+              }}
+            ></i>
           </div>
         </div>
       </React.Fragment>

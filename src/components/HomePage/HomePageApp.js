@@ -8,8 +8,9 @@ class HomepageApp extends Component {
     return (
       <div className="App">
         <NavbarPage />
-
-        <Home />
+        <div style={{marginTop:"25px"}}>
+          <Home />
+        </div>
       </div>
     );
   }

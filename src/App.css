@@ -15,4 +15,6 @@ body {
   /* background: #f1faee;  */
  /* display: flex; */
   justify-content: center;
+  max-width: 100%;
+    overflow-x: hidden;
 }

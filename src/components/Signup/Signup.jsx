@@ -1,18 +1,10 @@
 import React from "react";
 import { Formik } from "formik";
-//import { Redirect } from "react-router-dom";
 import "../../Form/Form.scss";
-//import { createHashHistory } from "history";
-//import { createBrowserHistory } from "history";
-//import { withRouter } from "react-router-dom";
-
 import { toast } from "react-toastify";
-
-// Import toastify css file
 import "react-toastify/dist/ReactToastify.css";
+import constantAPI from "../../ConstantAPI/constantAPI";
 
-// toast-configuration method,
-// it is compulsory method.
 toast.configure();
 
 const initialValues = {
@@ -67,7 +59,7 @@ const submitForm = (values) => {
   //alert("A form was submitted: " + this.state);
   var responseMessage = "";
   var status = "";
-  var res = fetch("https://jedischoolteam3.tk/signup", {
+  var res = fetch(constantAPI.SIGNUP_API, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +75,7 @@ const submitForm = (values) => {
     }),
   }).then(function (response) {
     status = response.status;
-    console.log(status)
+    console.log(status);
     return response.json();
   });
 
@@ -91,7 +83,7 @@ const submitForm = (values) => {
     const a = await res;
     console.log(a.message);
     responseMessage = a.message;
-    console.log(status)
+    console.log(status);
     if (status == "201") {
       //history.push('/home');
       window.location.href = "/";
@@ -105,14 +97,7 @@ const submitForm = (values) => {
   //event.preventDefault();
 };
 
-//export default Signup;
-
-const Signup = (/*{history}*/) => {
-  //   setTimeout(() => {
-  //     //history.goBack();
-  //     history.push("/home");
-
-  // }, 200000);
+const Signup = () => {
   return (
     <Formik
       initialValues={initialValues}
@@ -230,7 +215,7 @@ const Signup = (/*{history}*/) => {
                 <div className="form-row">
                   <label htmlFor="phone">Phone Number</label>
                   <input
-                    type="phone"
+                    type="text"
                     name="phone"
                     id="phone"
                     value={values.phone}
