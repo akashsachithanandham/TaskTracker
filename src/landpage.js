@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import Header from './HeaderComponent';
 import FooterComponent from './FooterComponent';
+import Header from './HeaderComponent';
+//import FooterComponent from './FooterComponent';
 import Navbar from './NavbarComponent';
 class Landpage extends Component {
     state = {  }
     render() { 
         return (
           <React.Fragment>
-            <div className="App">
+             <div className="Lander" style={{marginBottom:"25px"}}> 
               <Navbar />
-              {/* <Header />
-              <FooterComponent /> */}
+              <Header />
+              <FooterComponent />
             </div>
           </React.Fragment>
         );

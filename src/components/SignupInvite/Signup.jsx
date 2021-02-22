@@ -3,11 +3,15 @@ import { Formik } from "formik";
 import "../../Form/Form.scss";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import constantAPI from "../../ConstantAPI/constantAPI";
 
 toast.configure();
 
+//const e = this.props.email;
+
+
 const initialValues = {
-  email: "mallikasachin@gmail.com",
+  email: "",
   password: "",
   reenterPassword: "",
   firstName: "",
@@ -21,11 +25,11 @@ const validate = (values) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   const phoneRegex = /^\d{10}$/;
 
-  if (!values.email) {
-    errors.email = "Email is required!";
-  } else if (!regex.test(values.email)) {
-    errors.email = "Invalid Email!";
-  }
+  // if (!values.email) {
+  //   errors.email = "Email is required!";
+  // } else if (!regex.test(values.email)) {
+  //   errors.email = "Invalid Email!";
+  // }
 
   if (!values.password) {
     errors.password = "Password is required!";
@@ -57,8 +61,8 @@ const submitForm = (values) => {
   console.log(values);
   //alert("A form was submitted: " + this.state);
   var responseMessage = "";
-
-  var res = fetch("http://65.0.91.167:8000/InviteeSignup/Team1", {
+var status = "";
+  var res = fetch(constantAPI.SIGNUP_API, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -68,21 +72,23 @@ const submitForm = (values) => {
       User_Name: values.userName,
       First_Name: values.firstName,
       Last_Name: values.lastName,
-      User_Email: "mallikasachin@gmail.com",
+      User_Email: initialValues.email,
       phone_no: values.phone,
       password: values.password,
     }),
   }).then(function (response) {
+    status = response.status;
     return response.json();
+
   });
 
   const printMessage = async () => {
     const a = await res;
     console.log(a.message);
     responseMessage = a.message;
-    if (responseMessage === "User created successfully.") {
+    if (status == "201") {
       //history.push('/home');
-      window.location.href = "/";
+      window.location.href = "/login";
     } else {
       //alert(a.message);
       toast.error(responseMessage, { position: toast.POSITION.TOP_CENTER });
@@ -93,7 +99,9 @@ const submitForm = (values) => {
   //event.preventDefault();
 };
 
-const Signup = () => {
+function Signup(props){
+  console.log(props.email);
+  initialValues.email = props.email;
   return (
     <Formik
       initialValues={initialValues}
@@ -191,6 +199,17 @@ const Signup = () => {
                     <span className="error">{errors.userName}</span>
                   )}
                 </div>
+                <div className="form-row">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={props.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    disabled
+                  /></div>
 
                 <div className="form-row">
                   <label htmlFor="phone">Phone Number</label>

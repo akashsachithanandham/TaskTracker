@@ -3,7 +3,7 @@ import LoginApp from "./components/Login/LoginApp";
 import SignupApp from "./components/Signup/SignupApp";
 import SignupAppInvite from "./components/SignupInvite/SignupAppInvite";
 import HomePageApp from "./components/HomePage/HomePageApp";
-//import Landpage from "./landpage";
+import Landpage from "./landpage";
 
 import React, { Component } from 'react';
 
@@ -21,9 +21,9 @@ class App extends Component {
       <BrowserRouter>
         <div className="App text-white m-50">
           <Route path ="/login" component = {LoginApp}/>
-          {/* <Route exact path="/abc" component={Landpage} /> */}
+          <Route exact path="/" component={Landpage} />
           <Route path="/signup" component={SignupApp} />
-          <Route path="/signupInvite" component={SignupAppInvite}/>
+          <Route path="/signupInvite/:inviteId" component={SignupAppInvite}/>
 
           {/* <Header />
           <Form /> */}

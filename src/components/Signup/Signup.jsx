@@ -86,7 +86,7 @@ const submitForm = (values) => {
     console.log(status);
     if (status == "201") {
       //history.push('/home');
-      window.location.href = "/";
+      window.location.href = "/login";
     } else {
       //alert(a.message);
       toast.error(responseMessage, { position: toast.POSITION.TOP_CENTER });
